@@ -1,0 +1,5 @@
+{
+  "@renku_data_type": "renku.infrastructure.database.RenkuOOBTree",
+  "@renku_data_value": null,
+  "@renku_oid": "activities"
+}

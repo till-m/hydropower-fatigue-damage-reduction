@@ -1,0 +1,87 @@
+{
+  "@renku_data_type": "BTrees.OOBTree.OOBucket",
+  "@renku_data_value": {
+    "@renku_data_type": "builtins.tuple",
+    "@renku_data_value": [
+      {
+        "@renku_data_type": "builtins.tuple",
+        "@renku_data_value": [
+          "BTree",
+          {
+            "@renku_data_type": "type",
+            "@renku_data_value": "BTrees.OOBTree.OOBTree"
+          },
+          "Bucket",
+          {
+            "@renku_data_type": "type",
+            "@renku_data_value": "BTrees.OOBTree.OOBucket"
+          },
+          "Set",
+          {
+            "@renku_data_type": "type",
+            "@renku_data_value": "BTrees.OOBTree.OOSet"
+          },
+          "TreeSet",
+          {
+            "@renku_data_type": "type",
+            "@renku_data_value": "BTrees.OOBTree.OOTreeSet"
+          },
+          "attrname",
+          "downstream",
+          "call",
+          false,
+          "difference",
+          {
+            "@renku_data_type": "function",
+            "@renku_data_value": "BTrees._OOBTree.difference"
+          },
+          "dump",
+          {
+            "@renku_data_type": "function",
+            "@renku_data_value": "renku.infrastructure.gateway.database_gateway.dump_activity"
+          },
+          "element",
+          {
+            "@renku_data_type": "zope.interface.interface.Attribute",
+            "@renku_data_value": {
+              "_Element__tagged_values": null,
+              "__doc__": "the downstream activities",
+              "__name__": "downstream",
+              "interface": {
+                "@renku_data_type": "type",
+                "@renku_data_value": "renku.infrastructure.gateway.database_gateway.IActivityDownstreamRelation"
+              }
+            }
+          },
+          "interface",
+          {
+            "@renku_data_type": "type",
+            "@renku_data_value": "renku.infrastructure.gateway.database_gateway.IActivityDownstreamRelation"
+          },
+          "intersection",
+          {
+            "@renku_data_type": "function",
+            "@renku_data_value": "BTrees._OOBTree.intersection"
+          },
+          "load",
+          {
+            "@renku_data_type": "function",
+            "@renku_data_value": "renku.infrastructure.gateway.database_gateway.load_activity"
+          },
+          "multiple",
+          false,
+          "multiunion",
+          null,
+          "name",
+          "downstream",
+          "union",
+          {
+            "@renku_data_type": "function",
+            "@renku_data_value": "BTrees._OOBTree.union"
+          }
+        ]
+      }
+    ]
+  },
+  "@renku_oid": "43e996e4fa274320913857c9c081df767c017077c3a84bdb932a191472e59229"
+}

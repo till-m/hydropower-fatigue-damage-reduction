@@ -1,0 +1,39 @@
+{
+  "@renku_data_type": "renku.domain_model.project.Project",
+  "@renku_oid": "project",
+  "agent_version": "2.9.2",
+  "annotations": [],
+  "creator": {
+    "@renku_data_type": "renku.domain_model.provenance.agent.Person",
+    "@renku_data_value": {
+      "affiliation": null,
+      "alternate_name": null,
+      "email": "musertill@gmail.com",
+      "id": "mailto:musertill@gmail.com",
+      "name": "Till Muser"
+    }
+  },
+  "date_created": {
+    "@renku_data_type": "datetime.datetime",
+    "@renku_data_value": "2024-10-08T17:11:59.657853+00:00"
+  },
+  "description": "",
+  "id": "/projects/musertill/hydropower-fatigue-damage-reduction",
+  "image": null,
+  "keywords": [],
+  "minimum_renku_version": "2.8.0",
+  "name": "hydropower-fatigue-damage-reduction",
+  "template_metadata": {
+    "@renku_data_type": "renku.domain_model.project.ProjectTemplateMetadata",
+    "@renku_data_value": {
+      "immutable_template_files": [],
+      "metadata": "{\"__template_source__\": \"https://github.com/SwissDataScienceCenter/renku-project-template\", \"__template_ref__\": \"0.7.2\", \"__template_id__\": \"python-minimal\", \"__namespace__\": \"musertill\", \"__repository__\": \"https://gitlab.renkulab.io\", \"__sanitized_project_name__\": \"hydropower-fatigue-damage-reduction\", \"__project_slug__\": \"musertill/hydropower-fatigue-damage-reduction\", \"__project_description__\": \"\", \"__renku_version__\": \"2.9.2\", \"name\": \"hydropower-fatigue-damage-reduction\", \"__name__\": \"hydropower-fatigue-damage-reduction\", \"__template_version__\": \"ee4cf00c52c6cd45363a40b55540343e9ecf70af\", \"__automated_update__\": true}",
+      "ssh_supported": true,
+      "template_id": "python-minimal",
+      "template_ref": "0.7.2",
+      "template_source": "https://github.com/SwissDataScienceCenter/renku-project-template",
+      "template_version": "ee4cf00c52c6cd45363a40b55540343e9ecf70af"
+    }
+  },
+  "version": 10
+}

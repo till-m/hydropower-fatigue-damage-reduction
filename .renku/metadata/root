@@ -1,0 +1,152 @@
+{
+  "@renku_data_type": "renku.infrastructure.database.RenkuOOBTree",
+  "@renku_data_value": {
+    "@renku_data_type": "builtins.tuple",
+    "@renku_data_value": [
+      {
+        "@renku_data_type": "builtins.tuple",
+        "@renku_data_value": [
+          {
+            "@renku_data_type": "builtins.tuple",
+            "@renku_data_value": [
+              {
+                "@renku_data_type": "builtins.tuple",
+                "@renku_data_value": [
+                  "_downstream_relations",
+                  {
+                    "@renku_data_type": "renku.infrastructure.database.RenkuOOBTree",
+                    "@renku_oid": "_downstream_relations",
+                    "@renku_reference": true
+                  },
+                  "activities",
+                  {
+                    "@renku_data_type": "renku.infrastructure.database.Index",
+                    "@renku_oid": "activities-index",
+                    "attribute": "id",
+                    "entries": {
+                      "@renku_data_type": "renku.infrastructure.database.RenkuOOBTree",
+                      "@renku_oid": "activities",
+                      "@renku_reference": true
+                    },
+                    "key_type": null,
+                    "name": "activities",
+                    "object_type": "renku.domain_model.provenance.activity.Activity"
+                  },
+                  "activities-by-generation",
+                  {
+                    "@renku_data_type": "renku.infrastructure.database.RenkuOOBTree",
+                    "@renku_oid": "activities-by-generation",
+                    "@renku_reference": true
+                  },
+                  "activities-by-usage",
+                  {
+                    "@renku_data_type": "renku.infrastructure.database.RenkuOOBTree",
+                    "@renku_oid": "activities-by-usage",
+                    "@renku_reference": true
+                  },
+                  "activity-catalog",
+                  {
+                    "@renku_data_type": "zc.relation.catalog.Catalog",
+                    "@renku_oid": "activity-catalog",
+                    "@renku_reference": true
+                  },
+                  "activity-collections",
+                  {
+                    "@renku_data_type": "renku.infrastructure.database.Index",
+                    "@renku_oid": "activity-collections-index",
+                    "attribute": "id",
+                    "entries": {
+                      "@renku_data_type": "renku.infrastructure.database.RenkuOOBTree",
+                      "@renku_oid": "activity-collections",
+                      "@renku_reference": true
+                    },
+                    "key_type": null,
+                    "name": "activity-collections",
+                    "object_type": "renku.domain_model.provenance.activity.ActivityCollection"
+                  },
+                  "datasets",
+                  {
+                    "@renku_data_type": "renku.infrastructure.database.Index",
+                    "@renku_oid": "datasets-index",
+                    "attribute": "name",
+                    "entries": {
+                      "@renku_data_type": "renku.infrastructure.database.RenkuOOBTree",
+                      "@renku_oid": "datasets",
+                      "@renku_reference": true
+                    },
+                    "key_type": null,
+                    "name": "datasets",
+                    "object_type": "renku.domain_model.dataset.Dataset"
+                  },
+                  "datasets-provenance-tails",
+                  {
+                    "@renku_data_type": "renku.infrastructure.database.Index",
+                    "@renku_oid": "datasets-provenance-tails-index",
+                    "attribute": "id",
+                    "entries": {
+                      "@renku_data_type": "renku.infrastructure.database.RenkuOOBTree",
+                      "@renku_oid": "datasets-provenance-tails",
+                      "@renku_reference": true
+                    },
+                    "key_type": null,
+                    "name": "datasets-provenance-tails",
+                    "object_type": "renku.domain_model.dataset.Dataset"
+                  },
+                  "datasets-tags",
+                  {
+                    "@renku_data_type": "renku.infrastructure.database.Index",
+                    "@renku_oid": "datasets-tags-index",
+                    "attribute": null,
+                    "entries": {
+                      "@renku_data_type": "renku.infrastructure.database.RenkuOOBTree",
+                      "@renku_oid": "datasets-tags",
+                      "@renku_reference": true
+                    },
+                    "key_type": null,
+                    "name": "datasets-tags",
+                    "object_type": "persistent.list.PersistentList"
+                  },
+                  "plans",
+                  {
+                    "@renku_data_type": "renku.infrastructure.database.Index",
+                    "@renku_oid": "plans-index",
+                    "attribute": "id",
+                    "entries": {
+                      "@renku_data_type": "renku.infrastructure.database.RenkuOOBTree",
+                      "@renku_oid": "plans",
+                      "@renku_reference": true
+                    },
+                    "key_type": null,
+                    "name": "plans",
+                    "object_type": "renku.domain_model.workflow.plan.AbstractPlan"
+                  },
+                  "plans-by-name",
+                  {
+                    "@renku_data_type": "renku.infrastructure.database.Index",
+                    "@renku_oid": "plans-by-name-index",
+                    "attribute": "name",
+                    "entries": {
+                      "@renku_data_type": "renku.infrastructure.database.RenkuOOBTree",
+                      "@renku_oid": "plans-by-name",
+                      "@renku_reference": true
+                    },
+                    "key_type": null,
+                    "name": "plans-by-name",
+                    "object_type": "renku.domain_model.workflow.plan.AbstractPlan"
+                  },
+                  "project",
+                  {
+                    "@renku_data_type": "renku.domain_model.project.Project",
+                    "@renku_oid": "project",
+                    "@renku_reference": true
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "@renku_oid": "root"
+}
