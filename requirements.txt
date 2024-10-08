@@ -1,0 +1,15 @@
+rfcnt
+pandas
+numpy==1.26
+matplotlib
+torch
+pytorch-lightning
+ipywidgets
+fastparquet
+scipy
+wandb
+plotly # required to log interactive plots with wandb
+einops
+icecream
+rainflow
+multiprocess

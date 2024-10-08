@@ -1,12 +1,12 @@
 ########################################################
 #        Renku install section - do not edit           #
 
-FROM renku/renkulab-py:3.10-0.22.0 as builder
+FROM renku/renkulab-py:3.10-0.16.0 as builder
 
 # RENKU_VERSION determines the version of the renku CLI
 # that will be used in this image. To find the latest version,
 # visit https://pypi.org/project/renku/#history.
-ARG RENKU_VERSION=2.9.2
+ARG RENKU_VERSION=2.3.2
 
 # Install renku from pypi or from github if a dev version
 RUN if [ -n "$RENKU_VERSION" ] ; then \
@@ -25,7 +25,7 @@ RUN if [ -n "$RENKU_VERSION" ] ; then \
 #             End Renku install section                #
 ########################################################
 
-FROM renku/renkulab-py:3.10-0.22.0
+FROM renku/renkulab-py:3.10-0.16.0
 
 # Uncomment and adapt if code is to be included in the image
 # COPY src /code/src
@@ -34,12 +34,13 @@ FROM renku/renkulab-py:3.10-0.22.0
 # e.g. the following installs apt-utils and vim; each pkg on its own line, all lines
 # except for the last end with backslash '\' to continue the RUN line
 #
-# USER root
-# RUN apt-get update && \
-#    apt-get install -y --no-install-recommends \
-#    apt-utils \
-#    vim
-# USER ${NB_USER}
+
+USER root
+RUN apt-get update && \
+    apt-get install --no-install-recommends -y \
+        dvipng texlive-latex-extra texlive-fonts-recommended cm-super
+
+USER ${NB_USER}
 
 # install the python dependencies
 COPY requirements.txt environment.yml /tmp/
