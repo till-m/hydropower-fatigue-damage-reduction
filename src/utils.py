@@ -22,7 +22,8 @@ def md5_file(filename: Union[str, Path]) -> str:
 
 
 def md5_update_from_dir(directory: Union[str, Path], hash: Hash) -> Hash:
-    assert Path(directory).is_dir()
+    if not Path(directory).is_dir():
+        raise FileNotFoundError
     for path in sorted(Path(directory).iterdir(), key=lambda p: str(p).lower()):
         hash.update(path.name.encode())
         if path.is_file():
@@ -33,7 +34,11 @@ def md5_update_from_dir(directory: Union[str, Path], hash: Hash) -> Hash:
 
 
 def md5_dir(directory: Union[str, Path]) -> str:
-    return str(md5_update_from_dir(directory, hashlib.md5()).hexdigest())
+    try:
+        return str(md5_update_from_dir(directory, hashlib.md5()).hexdigest())
+    except FileNotFoundError:
+        return 'empty-dir'
+    
 
 
 def plot_approximation(y_true, y_pred, title, columns):
