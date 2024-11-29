@@ -7,6 +7,7 @@ from src.utils import md5_dir
 
 TARGET_COLUMNS = ["Manner_1", "Manner_4"]
 CONTROL_COLUMNS = ["Turbine_speed_(rpm)", "Additionnal_GVO_(XFLEX)", "High_head_(A)"]
+IN_FOLDER = "data/toy_examples"
 DATA_DIRECTORY = "data/normalized"
 
 iTFDNN_CONFIG = {
@@ -53,7 +54,7 @@ DATA_CONFIG = {
         "batch_size": 1,
         "preprocess_kwargs": {
             "assign_val": 'BEP',
-            "in_folder": "data/c1sel"
+            "in_folder": IN_FOLDER
         },
         "setup_kwargs" : {
             "data_directory": DATA_DIRECTORY,
