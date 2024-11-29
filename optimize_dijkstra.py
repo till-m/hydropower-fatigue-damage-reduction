@@ -114,7 +114,12 @@ class DijkstraStartupOptimizer():
     def __init__(self, start, end, grid_size=256, interpol_length=None, mode='instant', diagonal_neighbors=False, max_hop_distance=1, allow_decrease=True, forbidden_region=True) -> None:
         self.start = start
         self.end = end
-        self.interpol_length = interpol_length if interpol_length is not None else 83_200 // grid_size
+
+        self.interpol_length = (
+            interpol_length if interpol_length is not None
+            else ((256 * 128) // grid_size) # keep timescale constant
+        )
+
         self.grid_size = grid_size
         self.mode = mode
         self.diagonal_neighbors = diagonal_neighbors
@@ -125,8 +130,7 @@ class DijkstraStartupOptimizer():
         gvo = np.linspace(start[1], end[1], grid_size)
         self.grid = np.array([[x_i, y_j] for y_j in gvo for x_i in turbine_speed]).reshape((grid_size, grid_size, 2))
         self.forbidden_region = forbidden_region
-        
-    
+
     def repeat_last_point(self, u, n_times=4096):
         assert len(u.shape) == 3
         last_point = einops.rearrange(u[:, -1], 'b c -> b 1 c')
@@ -306,7 +310,7 @@ class DijkstraStartupOptimizer():
                 # Eliminate blocked squares
                 neighbors = [tuple(n) for n in neighbors if n is not parent[current_node]]
                 if self.forbidden_region:
-                    neighbors = [n for n in neighbors if (n[0]< 75 or n[1] > 123)]
+                    neighbors = [n for n in neighbors if (n[0]< (75 * self.grid_size/256) or n[1] > (123 * self.grid_size/256))]
 
                 trajectories = einops.rearrange(self.parallel_construct_trajectories([path + [node] for node in neighbors]), 'b1 b2 t c -> (b1 b2) t c', b2=1)
                 # calculate the cost of visiting the neighbor
@@ -334,7 +338,11 @@ class DijkstraStartupOptimizer():
             return parent, cost, final_trajectory, final_stress
 
 if __name__ == '__main__':
+    # to reproduce the optimization as in the paper
     optimizer = DijkstraStartupOptimizer(start, end, grid_size=256, interpol_length=128, diagonal_neighbors=True, mode='damage', allow_decrease=False, max_hop_distance=(2, 6), forbidden_region=True)
+
+    # to run a smaller example
+    #optimizer = DijkstraStartupOptimizer(start, end, grid_size=32, interpol_length=None, diagonal_neighbors=True, mode='damage', allow_decrease=False, max_hop_distance=(2, 6), forbidden_region=True)
 
     res = optimizer.optimize(interactive=False)
 
