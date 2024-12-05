@@ -12,6 +12,7 @@ import pytorch_lightning as pl
 import heapq
 import pickle
 import itertools
+from functools import partial
 from multiprocess import Pool
 
 import logging # disable the log from seed_everything
@@ -107,13 +108,31 @@ def parallel_damage_cost(trajectories: torch.Tensor):
     result = p.map_async(damage_index, trajectories).get()
     return np.array(result) ** (1/8.)
 
+def construct_trajectory(nodes, interpol_length, grid, n_intial_segments=None):
+    if n_intial_segments is None:
+        n_intial_segments = 2048 // interpol_length
+    prev = tuple(nodes[0])
+
+    # repeat initial node
+    trajectory = [*einops.repeat(grid[tuple(nodes[0])], 'c -> reps t c', t=interpol_length, reps=n_intial_segments)]
+
+    for node in nodes[1:]:
+        node = tuple(node)
+        trajectory.append(interpolate_trajectory(grid[prev], grid[node], interpol_length))
+        prev = node
+    return einops.rearrange(trajectory, 'seg t c -> 1 (seg t) c')
+
+def interpolate_trajectory(node1, node2, interpol_length) -> np.ndarray:
+    return np.array([np.linspace(node1[i], node2[i], num=interpol_length) for i, _ in enumerate(node1)]).T
+
 def damage_cost(trajectory):
     return [damage_index(signal_[..., 0])**(1/8.) for signal_ in trajectory]
 
 class DijkstraStartupOptimizer():
-    def __init__(self, start, end, grid_size=256, interpol_length=None, mode='instant', diagonal_neighbors=False, max_hop_distance=1, allow_decrease=True, forbidden_region=True) -> None:
+    def __init__(self, start, end, stress_model, grid_size=256, interpol_length=None, mode='instant', diagonal_neighbors=False, max_hop_distance=1, allow_decrease=True, forbidden_region=True) -> None:
         self.start = start
         self.end = end
+        self.stress_model = stress_model
 
         self.interpol_length = (
             interpol_length if interpol_length is not None
@@ -139,24 +158,7 @@ class DijkstraStartupOptimizer():
 
     def parallel_construct_trajectories(self, paths):
         p = Pool(len(paths))
-        return p.map_async(self.construct_trajectory, paths).get()
-
-    def construct_trajectory(self, nodes, n_intial_segments=None):
-        if n_intial_segments is None:
-            n_intial_segments = 2048 // self.interpol_length
-        prev = tuple(nodes[0])
-
-        # repeat initial node
-        trajectory = [*einops.repeat(self.grid[tuple(nodes[0])], 'c -> reps t c', t=self.interpol_length, reps=n_intial_segments)]
-
-        for node in nodes[1:]:
-            node = tuple(node)
-            trajectory.append(self.interpolate_trajectory(self.grid[prev], self.grid[node]))
-            prev = node
-        return einops.rearrange(trajectory, 'seg t c -> 1 (seg t) c')
-    
-    def interpolate_trajectory(self, node1, node2) -> np.ndarray:
-        return np.array([np.linspace(node1[i], node2[i], num=self.interpol_length) for i, _ in enumerate(node1)]).T
+        return p.map_async(partial(construct_trajectory, interpol_length=self.interpol_length, grid=self.grid), paths).get()
 
     def calculate_stress(self, u, return_offset=False, seed_everything=True) -> torch.Tensor:
         head = end[-1] * torch.ones(u.shape[:-1] + (1,))
@@ -173,7 +175,7 @@ class DijkstraStartupOptimizer():
 
         if seed_everything:
             pl.seed_everything(42)
-        stress, offset = stress_model(u.to(stress_model.device, dtype=stress_model.dtype), return_offset=True)
+        stress, offset = self.stress_model(u.to(self.stress_model.device, dtype=self.stress_model.dtype), return_offset=True)
         stress = torch.einsum('i,...i-> ...i', torch.sqrt(torch.from_numpy(var2.to_numpy())), stress)
         offset = torch.einsum('i,...i-> ...i', torch.sqrt(torch.from_numpy(var2.to_numpy())), offset)
 
@@ -262,8 +264,6 @@ class DijkstraStartupOptimizer():
                             sample_from.append(-step)
 
                 base_neighbors = np.vstack(sample_from).astype(int)
-            
-            ic(base_neighbors)
 
             try:
                 with open('ckpt.pickle', 'rb') as handle:
@@ -288,7 +288,7 @@ class DijkstraStartupOptimizer():
                 path = self.get_path(current_node, parent)
                 self.print_state(path, current_node, goal, len(heap), len(visited))
                 if interactive:
-                    trajectory = self.construct_trajectory(path)
+                    trajectory = construct_trajectory(path, interpol_length=self.interpol_length, grid=self.grid)
                     stress = self.calculate_stress(trajectory).squeeze()
                     axs[0].lines[0].set_data(np.arange(trajectory.shape[-2]), trajectory.squeeze(0)[:, 0] * np.sqrt(var[0]))
                     axs[1].lines[0].set_data(np.arange(trajectory.shape[-2]), trajectory.squeeze(0)[:, 1]* np.sqrt(var[1]))
@@ -330,19 +330,18 @@ class DijkstraStartupOptimizer():
                         cost[neighbor] = new_cost
                         parent[neighbor] = current_node
                         heapq.heappush(heap, (new_cost, neighbor))
-            ic()
 
             final_path = self.get_path(goal, parent)
-            final_trajectory = self.construct_trajectory(final_path)
+            final_trajectory = construct_trajectory(final_path, interpol_length=self.interpol_length, grid=self.grid)
             final_stress = self.calculate_stress(final_trajectory).squeeze()
             return parent, cost, final_trajectory, final_stress
 
 if __name__ == '__main__':
     # to reproduce the optimization as in the paper
-    optimizer = DijkstraStartupOptimizer(start, end, grid_size=256, interpol_length=128, diagonal_neighbors=True, mode='damage', allow_decrease=False, max_hop_distance=(2, 6), forbidden_region=True)
+    optimizer = DijkstraStartupOptimizer(start, end, stress_model=stress_model, grid_size=256, interpol_length=128, diagonal_neighbors=True, mode='damage', allow_decrease=False, max_hop_distance=(2, 6), forbidden_region=True)
 
     # to run a smaller example
-    #optimizer = DijkstraStartupOptimizer(start, end, grid_size=32, interpol_length=None, diagonal_neighbors=True, mode='damage', allow_decrease=False, max_hop_distance=(2, 6), forbidden_region=True)
+    #optimizer = DijkstraStartupOptimizer(start, end, stress_model=stress_model, grid_size=32, interpol_length=None, diagonal_neighbors=True, mode='damage', allow_decrease=False, max_hop_distance=(2, 6), forbidden_region=True)
 
     res = optimizer.optimize(interactive=False)
 
