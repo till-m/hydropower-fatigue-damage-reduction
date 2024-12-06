@@ -74,7 +74,7 @@ DATA_CONFIG = {
 }
 
 TRAINER_CONFIG = {
-    "accelerator": "gpu",
+    "accelerator": 'auto',
     "max_epochs": 10000,
     "log_every_n_steps": 1,
     "gradient_clip_val": 1.,
