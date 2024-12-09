@@ -2,9 +2,6 @@ name: "base"
 channels:
   - conda-forge
 
-dependencies:
-  - cyl1tf
-
 
 # - add packages here
 # - one per line
