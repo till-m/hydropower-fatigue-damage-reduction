@@ -3,8 +3,16 @@ message: "If you use this software, please cite it as below."
 authors:
 - family-names: "Muser"
   given-names: "Till"
+- family-names: "Krymova"
+  given-nams: "Ekaterina"
+- family-names: "Morabito"
+  given-names: "Alessandro"
+- family-names: "Seydoux"
+  given-names: "Martin"
+- family-names: "Vagnoni"
+  given-names: "Elena"
 orcid: https://orcid.org/0000-0002-9856-4554
-title: "Hydropower Fatigue Damage Reduction"
+title: "Fatigue Damage Reduction in Hydropower Startups with Machine Learning"
 doi: 10.5281/zenodo.14628160
 version: v1.0.0
 date-released: 2025-01-10
